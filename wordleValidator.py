@@ -1,12 +1,19 @@
 import requests
-
+import pandas as pd
 class wordleValidator():
+    def __init__(self):
+        self.validWordDf = pd.read_csv("wordCSV/valid-words.csv", names = ["Words"])
+        self.APIurl = "https://wordotron.com/api/v1/check-word"
+
     def isValid(self, guess) -> bool:
-        url = f"https://wordotron.com/api/v1/check-word"
-        response = requests.post(
-            url,
-            json={"word": guess},
-            timeout=5
-        )
+        # local check first to save them rtts :)
+        if (self.validWordDf['Words'].isin([guess]).any()):
+            return True
+
+        # API based check from wordotron.com (FREE!) API :)
+        try:
+            response = requests.post(self.url, json = {"word": guess}, timeout = 7)
+        except:
+            return False # if the api ain't working, your word ain't right! jk. thats why we have the local 11k check first :)
 
         return response.json()["valid"]
