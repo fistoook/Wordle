@@ -1,4 +1,4 @@
-from wordleGame import wordleGame
+from wordleGameEngine import wordleGame
 
 if __name__ == "__main__":
     game = wordleGame(6, 5)
