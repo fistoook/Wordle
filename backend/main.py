@@ -1,4 +1,4 @@
-from wordleGameControllerServer import wordleServer
+from backend.wordleGameControllerServer import wordleServer
 
 if __name__ == "__main__":
     server = wordleServer()

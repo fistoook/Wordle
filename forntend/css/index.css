@@ -1,0 +1,94 @@
+:root {
+  /* Brand */
+  --pistachio: #bfd8a6;
+  --pistachio-light: #eaf3e2;
+  --pistachio-dark: #71945e;
+  --forest: #1f3a2e;
+  --gold: #e7c65a;
+
+  /* Interface */
+  --background: #fafbf7;
+  --surface: #ffffff;
+  --text: #1f3a2e;
+  --text-muted: #66756c;
+  --border: #cad7c4;
+  --key: #dce7d5;
+
+  /* Wordle states */
+  --correct: #92b879;
+  --present: #e7c65a;
+  --absent: #68726a;
+  --error: #c86b65;
+
+  /* Text on colored tiles */
+  --on-correct: #173023;
+  --on-present: #342e16;
+  --on-absent: #ffffff;
+}
+
+.game-table {
+    box-sizing: border-box;
+    display: block;
+    unicode-bidi: isolate;
+    user-select: none;
+
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+}
+
+.row-letter {
+    align-items: center;
+    border: 2px solid #c0c5d3;
+    font-size: 28px;
+    font-weight: 700;
+    height: 64px;
+    margin: 3px;
+    text-transform: uppercase;
+    width: 64px;
+    color: #393e4c;
+    background: #fbfcff;
+}
+
+.game-keyboard {
+    margin: 32px 0 20px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.game-keyboard-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    box-sizing: border-box;
+}
+
+.game-keyboard-button {
+    align-items: center;
+    background-color: #dce1ed;
+    color: #414a5e !important;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    color: inherit;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    flex: 1 1;
+    font-size: 18px;
+    font-weight: 700;
+    justify-content: center;
+    margin: 3px;
+    min-height: 54px;
+    padding: 3px;
+    text-decoration: inherit;
+    text-transform: capitalize;
+    transition: .2s;
+    box-sizing: border-box;
+    text-rendering: optimizeLegibility;
+    font: 18px 'Rubik', sans-serif;
+    font-weight: 300 900;
+    font-display: swap;
+}

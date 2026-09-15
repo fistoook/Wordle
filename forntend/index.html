@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/logoStyles.css">
+</head>
+
+<body>
+    <header class="fistook-header">
+        <img
+            class="fistook-logo__image"
+            src="assets/logo.png"
+            alt="Fistook-Wordle"
+        >
+    </header>
+
+    <div class="game-table">
+        <div class="row">
+            <div class="box" id="box1"></div>
+            <div class="box" id="box2"></div>
+            <div class="box" id="box3"></div>
+            <div class="box" id="box4"></div>
+            <div class="box" id="box5"></div>
+        </div>
+        <div class="row">
+            <div class="row-letter" id="row-letter1"></div>
+            <div class="row-letter" id="row-letter2"></div>
+            <div class="row-letter" id="row-letter3"></div>
+            <div class="row-letter" id="row-letter4"></div>
+            <div class="row-letter" id="row-letter5"></div>
+        </div>
+        <div class="row">
+            <div class="row-letter" id="row-letter1"></div>
+            <div class="row-letter" id="row-letter2"></div>
+            <div class="row-letter" id="row-letter3"></div>
+            <div class="row-letter" id="row-letter4"></div>
+            <div class="row-letter" id="row-letter5"></div>
+        </div>
+        <div class="row">
+            <div class="row-letter" id="row-letter1"></div>
+            <div class="row-letter" id="row-letter2"></div>
+            <div class="row-letter" id="row-letter3"></div>
+            <div class="row-letter" id="row-letter4"></div>
+            <div class="row-letter" id="row-letter5"></div>
+        </div>
+        <div class="row">
+            <div class="row-letter" id="row-letter1"></div>
+            <div class="row-letter" id="row-letter2"></div>
+            <div class="row-letter" id="row-letter3"></div>
+            <div class="row-letter" id="row-letter4"></div>
+            <div class="row-letter" id="row-letter5"></div>
+        </div>
+        <div class="row">
+            <div class="row-letter" id="row-letter1"></div>
+            <div class="row-letter" id="row-letter2"></div>
+            <div class="row-letter" id="row-letter3"></div>
+            <div class="row-letter" id="row-letter4"></div>
+            <div class="row-letter" id="row-letter5"></div>
+        </div>
+        </div>
+    </div>
+
+    <div class="game-keyboard">
+        <div class="game-keyboard-row">
+            <div tabindex="-1" class="game-keyboard-button">q</div>
+            <div tabindex="-1" class="game-keyboard-button">w</div>
+            <div tabindex="-1" class="game-keyboard-button">e</div>
+            <div tabindex="-1" class="game-keyboard-button">r</div>
+            <div tabindex="-1" class="game-keyboard-button">t</div>
+            <div tabindex="-1" class="game-keyboard-button">y</div>
+            <div tabindex="-1" class="game-keyboard-button">u</div>
+            <div tabindex="-1" class="game-keyboard-button">i</div>
+            <div tabindex="-1" class="game-keyboard-button">o</div>
+            <div tabindex="-1" class="game-keyboard-button">p</div>
+        </div>
+        <div class="game-keyboard-row">
+            <div tabindex="-1" class="game-keyboard-button">a</div>
+            <div tabindex="-1" class="game-keyboard-button">s</div>
+            <div tabindex="-1" class="game-keyboard-button">d</div>
+            <div tabindex="-1" class="game-keyboard-button">f</div>
+            <div tabindex="-1" class="game-keyboard-button">g</div>
+            <div tabindex="-1" class="game-keyboard-button">h</div>
+            <div tabindex="-1" class="game-keyboard-button">j</div>
+            <div tabindex="-1" class="game-keyboard-button">k</div>
+            <div tabindex="-1" class="game-keyboard-button">l</div>
+        </div>
+        <div class="game-keyboard-row">
+            <div tabindex="-1" class="game-keyboard-button Game-keyboard-button-wide">
+                <img src="assets/backspace.svg.webp" width="22" height="22" alt="Backspace">
+            </div>
+            <div tabindex="-1" class="game-keyboard-button">z</div>
+            <div tabindex="-1" class="game-keyboard-button">x</div>
+            <div tabindex="-1" class="game-keyboard-button">c</div>
+            <div tabindex="-1" class="game-keyboard-button">v</div>
+            <div tabindex="-1" class="game-keyboard-button">b</div>
+            <div tabindex="-1" class="game-keyboard-button">n</div>
+            <div tabindex="-1" class="game-keyboard-button">m</div>
+            <div tabindex="-1" class="game-keyboard-button Game-keyboard-button-wide">Enter</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

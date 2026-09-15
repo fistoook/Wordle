@@ -1,0 +1,31 @@
+.fistook-header {
+  display: flex;
+  width: 100%;
+  min-height: 8rem;
+  padding: 1.25rem clamp(1rem, 4vw, 3rem);
+  align-items: center;
+  justify-content: center;
+  background: #fafbf7;
+  border-bottom: 1px solid #bfd8a6;
+  box-sizing: border-box;
+}
+
+.fistook-logo__image {
+  display: block;
+  width: auto;
+  height: 5.5rem;
+  max-width: 90%;
+  object-fit: contain;
+  user-select: none;
+}
+
+@media (max-width: 36rem) {
+  .fistook-header {
+    min-height: 6.5rem;
+    padding: 1rem;
+  }
+
+  .fistook-logo__image {
+    height: clamp(3rem, 16vw, 4.25rem);
+  }
+}

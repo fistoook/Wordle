@@ -1,5 +1,5 @@
 from wordleValidator import wordleValidator
-from wordleGameUtils import wordleGameEngineUtils
+from backend.wordleGameUtils import wordleGameEngineUtils
 
 LOST = -1
 IN_PROGRESS = 0

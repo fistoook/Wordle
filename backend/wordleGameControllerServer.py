@@ -1,6 +1,6 @@
 import socket
 import threading
-from wordleGameEngine import wordleGameEngine, CORRECT, PRESENT, ABSENT, LOST, IN_PROGRESS, WON
+from backend.wordleGameEngine import wordleGameEngine, CORRECT, PRESENT, ABSENT, LOST, IN_PROGRESS, WON
 
 HOST = '127.0.0.1'
 PORT = 4321
