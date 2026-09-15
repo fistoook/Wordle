@@ -22,7 +22,7 @@ class wordleGameEngine():
 
     def handleGuess(self, guess) -> tuple:
         if not self.validateGuess(guess.lower()):
-            return ('rejected', [], self.attempts_left, self.game_status)
+            return ('rejected', [], self.attempts_left, self.game_status, guess, self.word)
         
         self.attempts_left -= 1
         (correct, results) = self.checkGuess(guess.lower())
@@ -30,7 +30,7 @@ class wordleGameEngine():
         if (correct == self.word_length): self.game_status = WON
         elif (self.attempts_left == 0): self.game_status = LOST
 
-        return ('accepted', results, self.attempts_left, self.game_status)
+        return ('accepted', results, self.attempts_left, self.game_status, guess, self.word)
 
     def validateGuess(self, guess) -> bool:
         if (len(guess) != self.word_length): return False
