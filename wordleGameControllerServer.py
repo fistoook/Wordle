@@ -31,27 +31,35 @@ class wordleServer():
         self.greetClient(client_socket)
 
         try:
+            buffer = b""
             while True:
-                data = client_socket.recv(1024).strip()
-                if (not data): break
+                # TCP sends a stream of bytes, not necessarily full user input.
+                # It does deal with bringing the messages in order, but we cannot assume
+                # that every message will arrive as a single packet. So, we wait for that \n
+                # delimiter, and only then can we continue with our data.
+                chunk = client_socket.recv(1024)
+                if not chunk: break
 
-                message = data.decode()
-                response = wordle_game.handleGuess(message)
-                response_status = response[0]
-                response_results = response[1]
-                response_attempts_left = response[2]
-                response_game_status = response[3]
-                response_guess = response[4]
-                response_word = response[5]
+                buffer += chunk
+                if b"\n" in buffer:
+                    message, buffer = buffer.split(b"\n", 1)
+                    message = message.decode().strip()
+                    response = wordle_game.handleGuess(message)
+                    response_status = response[0]
+                    response_results = response[1]
+                    response_attempts_left = response[2]
+                    response_game_status = response[3]
+                    response_guess = response[4]
+                    response_word = response[5]
 
-                if (response_status == 'rejected'):
-                    client_socket.sendall("Invalid input, try again\n".encode())
-                    continue
+                    if (response_status == 'rejected'):
+                        client_socket.sendall("Invalid input, try again\n".encode())
+                        continue
 
-                client_response = self.structureResponse(response_results, response_attempts_left, response_game_status, response_guess, response_word)
-                client_socket.sendall(client_response.encode())
-                if ((response_game_status == WON) or (response_game_status == LOST)):
-                    break
+                    client_response = self.structureResponse(response_results, response_attempts_left, response_game_status, response_guess, response_word)
+                    client_socket.sendall(client_response.encode())
+                    if ((response_game_status == WON) or (response_game_status == LOST)):
+                        break
 
         finally:
             client_socket.close()
