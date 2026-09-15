@@ -26,12 +26,10 @@ class wordleGame():
         i = 1
         while i <= self.number_of_guesses:
             guess = input("Enter you guess: ")
-            if not self.validateInput(guess): i-=1; continue
+            if not self.validateInput(guess.lower()): i-=1; continue
 
-            correct = self.handleInput(guess)
-            if (correct == self.word_length):
-                print(f"CONGRATS")
-                return 
+            correct = self.handleInput(guess.lower())
+            if (correct == self.word_length): print(f"CONGRATS"); return 
             
         print("Out of tries! the word was: ", self.word)
 
@@ -45,17 +43,41 @@ class wordleGame():
         return True
 
     def handleInput(self, guess) -> int:
-        output = ''
+        # build occurence 
+        occurence_dict = {}
+        for letter in self.word:
+            if letter in occurence_dict:
+                occurence_dict[letter] += 1
+            else:
+                occurence_dict[letter] = 1
+    
+        output = [""] * self.word_length
         correct = 0
+
+        # first pass for those green dopamine hits.
+        # this is done to avoid the cases where we set letters as yellow, 
+        # and then discover they are later in the word. oopsy :)
+        for i in range(len(guess)):
+            curr = guess[i]
+            if (curr == self.word[i]):
+                output[i] = f"{GREEN}{curr}{RESET}"
+                occurence_dict[curr] -= 1
+                correct += 1
+
+        # second pass for those yellows abnd greys
         for j in range(len(guess)):
             curr = guess[j]
             if (curr == self.word[j]):
-                output += f"{GREEN}{curr}{RESET}"
-                correct+=1
+                continue
             elif (curr in self.word):
-                output += f"{YELLOW}{curr}{RESET}"
+                if occurence_dict[curr] > 0:
+                    output[j] = f"{YELLOW}{curr}{RESET}"
+                    occurence_dict[curr] -= 1
             else:
-                output += f"{GREY}{curr}{RESET}"
-        print(output)
-        
+                output[j] = f"{GREY}{curr}{RESET}"
+
+        for letter in output:
+            print(letter, end='')
+        print()
+
         return correct
