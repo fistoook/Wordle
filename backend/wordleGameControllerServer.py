@@ -1,5 +1,9 @@
 import socket
 import threading
+from pathlib import Path
+import sys
+PROJECT_DIRECTORY = Path(__file__).resolve().parent.parent # we resolve two directories back, to start from /wordle
+sys.path.insert(0, str(PROJECT_DIRECTORY))
 from backend.wordleGameEngine import wordleGameEngine, CORRECT, PRESENT, ABSENT, LOST, IN_PROGRESS, WON
 
 HOST = '127.0.0.1'

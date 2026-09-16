@@ -1,94 +1,184 @@
 :root {
-  /* Brand */
-  --pistachio: #bfd8a6;
-  --pistachio-light: #eaf3e2;
-  --pistachio-dark: #71945e;
-  --forest: #1f3a2e;
-  --gold: #e7c65a;
-
-  /* Interface */
-  --background: #fafbf7;
-  --surface: #ffffff;
-  --text: #1f3a2e;
-  --text-muted: #66756c;
-  --border: #cad7c4;
-  --key: #dce7d5;
-
-  /* Wordle states */
-  --correct: #92b879;
-  --present: #e7c65a;
-  --absent: #68726a;
-  --error: #c86b65;
-
-  /* Text on colored tiles */
-  --on-correct: #173023;
-  --on-present: #342e16;
-  --on-absent: #ffffff;
+    --background: #fafbf7;
+    --text: #1f3a2e;
+    --border: #cad7c4;
+    --key: #dce7d5;
+    --correct: #71945e;
+    --present: #d1aa2f;
+    --absent: #68726a;
+    --error: #a84740;
 }
 
-.game-table {
+.fistook-header {
+  display: flex;
+  width: 100%;
+  min-height: 6rem;
+  padding: 0.75rem clamp(1rem, 4vw, 3rem);
+  align-items: center;
+  justify-content: center;
+  background: #fafbf7;
+  border-bottom: 1px solid #bfd8a6;
+  box-sizing: border-box;
+}
+
+.fistook-logo__image {
+  display: block;
+  width: auto;
+  height: 4.5rem;
+  max-width: 90%;
+  object-fit: contain;
+  user-select: none;
+}
+
+@media (max-width: 36rem) {
+  .fistook-header {
+    min-height: 5rem;
+    padding: 0.5rem;
+  }
+
+  .fistook-logo__image {
+    height: clamp(3rem, 14vw, 4rem);
+  }
+}
+
+
+* {
     box-sizing: border-box;
-    display: block;
-    unicode-bidi: isolate;
-    user-select: none;
-
 }
 
-.row {
-    display: flex;
+body {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text);
+    background: var(--background);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+    font: inherit;
+}
+
+.game {
+    width: min(100%, 35rem);
+    margin: 0 auto;
+    padding: 0.75rem 1rem;
+    text-align: center;
+}
+
+.message {
+    min-height: 1.5rem;
+    margin: 0 0 0.75rem;
+    font-weight: 700;
+}
+
+.message.error {
+    color: var(--error);
+}
+
+.board {
+    display: grid;
+    gap: 0.35rem;
     justify-content: center;
 }
 
-.row-letter {
-    align-items: center;
-    border: 2px solid #c0c5d3;
-    font-size: 28px;
+.board-row {
+    display: grid;
+    grid-template-columns: repeat(5, 3.5rem);
+    gap: 0.35rem;
+}
+
+.tile {
+    display: grid;
+    width: 3.5rem;
+    aspect-ratio: 1;
+    place-items: center;
+    border: 2px solid var(--border);
+    background: #fff;
+    font-size: 1.75rem;
     font-weight: 700;
-    height: 64px;
-    margin: 3px;
     text-transform: uppercase;
-    width: 64px;
-    color: #393e4c;
-    background: #fbfcff;
 }
 
-.game-keyboard {
-    margin: 32px 0 20px;
-    display: flex;
-    flex-direction: column;
-
+.tile.filled {
+    border-color: var(--text);
 }
 
-.game-keyboard-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: stretch;
-    box-sizing: border-box;
+.tile.correct,
+.tile.present,
+.tile.absent {
+    border-color: transparent;
+    color: #fff;
 }
 
-.game-keyboard-button {
-    align-items: center;
-    background-color: #dce1ed;
-    color: #414a5e !important;
-    border: 2px solid transparent;
-    border-radius: 4px;
-    color: inherit;
-    cursor: pointer;
-    user-select: none;
+.correct {
+    background: var(--correct) !important;
+}
+
+.present {
+    background: var(--present) !important;
+}
+
+.absent {
+    background: var(--absent) !important;
+}
+
+.keyboard {
+    display: grid;
+    gap: 0.4rem;
+    margin-top: 1rem;
+}
+
+.keyboard-row {
     display: flex;
-    flex: 1 1;
-    font-size: 18px;
-    font-weight: 700;
     justify-content: center;
-    margin: 3px;
-    min-height: 54px;
-    padding: 3px;
-    text-decoration: inherit;
-    text-transform: capitalize;
-    transition: .2s;
-    box-sizing: border-box;
-    text-rendering: optimizeLegibility;
-    font: 18px 'Rubik', sans-serif;
-    font-weight: 300 900;
-    font-display: swap;
+    gap: 0.3rem;
+}
+
+.key {
+    min-width: 0;
+    height: 3rem;
+    flex: 1;
+    padding: 0.25rem;
+    border: 0;
+    border-radius: 0.25rem;
+    color: var(--text);
+    background: var(--key);
+    cursor: pointer;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.key.wide {
+    flex: 1.5;
+    font-size: 0.75rem;
+}
+
+.key:disabled {
+    cursor: default;
+}
+
+.new-game-button {
+    margin-top: 1.25rem;
+    padding: 0.7rem 1rem;
+    border: 0;
+    border-radius: 0.25rem;
+    color: #fff;
+    background: var(--text);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+@media (max-width: 26rem) {
+    .board-row {
+        grid-template-columns: repeat(5, 16vw);
+    }
+
+    .tile {
+        width: 16vw;
+        font-size: 1.4rem;
+    }
+
+    .game {
+        padding-inline: 0.5rem;
+    }
 }

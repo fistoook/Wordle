@@ -1,4 +1,8 @@
-from wordleValidator import wordleValidator
+from pathlib import Path
+import sys
+PROJECT_DIRECTORY = Path(__file__).resolve().parent.parent # we resolve two directories back, to start from /wordle
+sys.path.insert(0, str(PROJECT_DIRECTORY))
+from backend.wordleValidator import wordleValidator
 from backend.wordleGameUtils import wordleGameEngineUtils
 
 LOST = -1

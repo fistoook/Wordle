@@ -1,6 +1,11 @@
-import pandas as pd
+import random
+from pathlib import Path
+
+WORD_BANK_PATH = Path(__file__).resolve().parent / "wordCSV" / "word-bank.csv"
 
 class wordleGameEngineUtils():
     def pickWord(self) -> str:
-        wordBankDf = pd.read_csv("wordCSV/word-bank.csv", names=['Words'])
-        return wordBankDf.sample(1).iloc[0]['Words']
+        with WORD_BANK_PATH.open(encoding="utf-8") as word_bank_file:
+            words = [line.strip() for line in word_bank_file if line.strip()]
+
+        return random.choice(words)
