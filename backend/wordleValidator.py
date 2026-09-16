@@ -1,27 +1,34 @@
-import requests
-# scary, I know. but what hid does it just resolve the previous directories path
-# so that we can later access files in that directory.
-# why not just wirte the path? well beacuse it change from machine to machine!
-# so we resolve it dynamically, instead of assigning it realtively
+import json
 from pathlib import Path
+from urllib.request import Request, urlopen
+
 BACKEND_DIRECTORY = Path(__file__).resolve().parent
+VALID_WORDS_PATH = BACKEND_DIRECTORY / "wordCSV" / "valid-words.csv"
+WORD_API_URL = "https://wordotron.com/api/v1/check-word"
+
+with VALID_WORDS_PATH.open(encoding="utf-8") as valid_words_file:
+    VALID_WORDS = frozenset(line.strip().lower() for line in valid_words_file if line.strip())
+
+
 class wordleValidator():
     def __init__(self):
-        valid_words_path = BACKEND_DIRECTORY / "wordCSV" / "valid-words.csv"
-        with valid_words_path.open(encoding="utf-8") as valid_words_file:
-            self.validWords = {line.strip().lower() for line in valid_words_file if line.strip()}
-
-        self.APIurl = "https://wordotron.com/api/v1/check-word"
+        self.validWords = VALID_WORDS
 
     def isValid(self, guess) -> bool:
-        # local check first to save them rtts :)
-        if (guess.lower() in self.validWords):
+        guess = guess.lower()
+        if guess in self.validWords:
             return True
 
-        # API based check from wordotron.com (FREE!) API :)
+        request = Request(
+            WORD_API_URL,
+            data=json.dumps({"word": guess}).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
         try:
-            response = requests.post(self.APIurl, json = {"word": guess.lower()}, timeout = 7)
-        except:
-            return False # if the api ain't working, your word ain't right! jk. thats why we have the local 11k check first :)
+            with urlopen(request, timeout=7) as response:
+                result = json.load(response)
+        except (OSError, ValueError):
+            return False
 
-        return response.json()["valid"]
+        return isinstance(result, dict) and result.get("valid") is True

@@ -1,10 +1,8 @@
 import json
 import os
 import sys
-import threading
-import uuid
 from functools import partial
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from http.server import SimpleHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -16,6 +14,7 @@ sys.path.insert(0, str(PROJECT_DIRECTORY))
 sys.path.insert(0, str(BACKEND_DIRECTORY))
 
 from backend.wordleGameEngine import (ABSENT, CORRECT, IN_PROGRESS, LOST, PRESENT, WON, wordleGameEngine,)
+from backend.wordleHttpSecurity import BoundedThreadingHTTPServer, HttpRequestError, wordleHttpSecurity
 
 
 RESULT_NAMES = {CORRECT: "correct", PRESENT: "present", ABSENT: "absent",}
@@ -24,15 +23,17 @@ STATUS_NAMES = {LOST: "lost", IN_PROGRESS: "in_progress",WON: "won",}
 
 
 class wordleHttpJsonApi:
-    def __init__(self, host="127.0.0.1", port=8000):
+    def __init__(self, host="127.0.0.1", port=8000, security=None):
         self.host = host
         self.port = port
-        self.games = {} # dictonary of all running games
-        self.games_lock = threading.Lock() # prevents two requests from changing the same game simultaneously
+        self.security = security or wordleHttpSecurity()
 
         handler = partial(_WordleRequestHandler, api=self, directory=str(FRONTEND_DIRECTORY))
-        self.http_server = ThreadingHTTPServer((host, port), handler) # multiple users at once :)
-        self.http_server.daemon_threads = True
+        self.http_server = BoundedThreadingHTTPServer(
+            (host, port),
+            handler,
+            max_connections=self.security.max_connections,
+        )
 
     def run(self):
         previous_directory = os.getcwd()
@@ -46,20 +47,21 @@ class wordleHttpJsonApi:
         self.http_server.shutdown()
 
     def start_game(self):
-        game_id = uuid.uuid4().hex # generate random game id for the frontend to remember, kinda like a cookie
         game = wordleGameEngine(number_of_guesses=6, word_length=5)
+        game_id = self.security.add_game(game)
 
-        with self.games_lock: self.games[game_id] = game
+        if game_id is None:
+            return 503, {"message": "The server has too many active games. Try again later."}
 
-        return {"gameId": game_id, "wordLength": game.word_length, "maxGuesses": game.number_of_guesses,}
+        return 201, {"gameId": game_id, "wordLength": game.word_length, "maxGuesses": game.number_of_guesses,}
 
     def submit_guess(self, game_id, guess):
-        with self.games_lock:
-            game = self.games.get(game_id) # identify the exact game. thats why we userd uuid 
+        session = self.security.get_game(game_id)
+        if session is None:
+            return 404, {"message": "Game not found. Start a new game."}
 
-            if (game is None):
-                return 404, {"message": "Game not found. Start a new game."}
-
+        game = session["game"]
+        with session["lock"]:
             if (game.game_status != IN_PROGRESS):
                 return 409, {"message": "This game has already finished."}  # <- should not happen(hopefully)
 
@@ -89,12 +91,23 @@ class _WordleRequestHandler(SimpleHTTPRequestHandler):
         self.api = api
         super().__init__(*args, **kwargs)
 
+    def setup(self):
+        super().setup()
+        self.request_deadline = self.api.security.secure_connection(self.connection)
+
+    def finish(self):
+        try:
+            super().finish()
+        finally:
+            self.request_deadline.cancel()
+
     def do_POST(self):
         path = urlparse(self.path).path
 
         if (path == "/api/games"):
             # game created
-            self.send_json(201, self.api.start_game())
+            status_code, response_body = self.api.start_game()
+            self.send_json(status_code, response_body)
             return
 
         path_parts = path.strip("/").split("/")
@@ -122,18 +135,10 @@ class _WordleRequestHandler(SimpleHTTPRequestHandler):
 
     def read_json_body(self):
         try:
-            content_length = int(self.headers.get("Content-Length", "0"))
-            raw_body = self.rfile.read(content_length)
-            request_body = json.loads(raw_body)
-        except (ValueError, json.JSONDecodeError):
-            self.send_json(400, {"message": "The request body must be valid JSON."})
+            return self.api.security.read_json_body(self)
+        except HttpRequestError as error:
+            self.send_json(error.status_code, {"message": error.message})
             return None
-
-        if (not isinstance(request_body, dict)):
-            self.send_json(400, {"message": "The JSON body must be an object."})
-            return None
-
-        return request_body
 
     def send_json(self, status_code, body):
         encoded_body = json.dumps(body).encode("utf-8")
