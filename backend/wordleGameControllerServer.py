@@ -33,6 +33,7 @@ class wordleServer():
         print(f"Connected: {client_address}")
         wordle_game = wordleGameEngine(6, 5)
         self.greetClient(client_socket)
+        self.pickMode(client_socket)
 
         try:
             buffer = b""
@@ -78,6 +79,14 @@ class wordleServer():
 """ # love me some banners! you know those ascii gorgeus one to get when using cli tools? they are awesome :)
         socket.sendall(banner.encode())
 
+    def pickMode(self, socket):
+        socket.sendall("How many letters? \n".encode())
+        letters = socket.recv(1024).decode()
+        while not (int(letters) <= 8 and int(letters) >= 3):
+            socket.sendall("Nope. it has to be between 3-8: \n".encode())
+            letters = socket.recv(1024).decode()
+        
+        
     def structureResponse(self, results, attempts_left, game_status, guess, word) -> str:
         output = ""
         index = 0
